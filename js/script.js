@@ -1,9 +1,14 @@
 // Profile info
 const overview = document.querySelector(".overview");
 const username = "rebecca-moon";
+//Repo info
 const repoList = document.querySelector(".repo-list");
 const repoSection = document.querySelector(".repos");
 const repoData = document.querySelector(".repo-data");
+//back to gallery button
+const backToGallery = document.querySelector(".view-repos");
+const filterInput = document.querySelector(".filter-repos")
+
 
 const information = async function () {
     const response = await fetch(`https://api.github.com/users/${username}`);
@@ -40,6 +45,7 @@ const gitRepos = async function () {
 };
 
 const displayRepos = function (repos) {
+    filterInput.classList.remove("hide");
     for (const repo of repos) {
         const repoItem = document.createElement("li");
         repoItem.classList.add("repo");
@@ -88,4 +94,28 @@ const displaySpecificInfo = function (repoInfo, languages) {
     repoData.append(div);
     repoData.classList.remove("hide");
     repoSection.classList.add("hide");
+    backToGallery.classList.remove("hide");
 };
+
+backToGallery.addEventListener("click", function () {
+    repoSection.classList.remove("hide");
+    repoData.classList.add("hide");
+    backToGallery.classList.add("hide");
+});
+
+filterInput.addEventListener("input", function(e) {
+    const searchFilter = e.target.value;
+    const repos = document.querySelectorAll(".repo");
+    const lowerCaseSearch = searchFilter.toLowerCase();
+
+    for (const repo of repos) {
+        const lowerCaseRepo = repo.innerText.toLowerCase();
+        
+        if (lowerCaseRepo.includes(lowerCaseSearch)) {
+            repo.classList.remove("hide");
+        } else {
+            repo.classList.add("hide");
+        }
+    };
+
+});
